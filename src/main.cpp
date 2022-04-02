@@ -38,7 +38,7 @@ template<std::size_t Width, std::size_t Height> struct GameBoard
     }
   }
 
-  void visit(auto visitor)
+  template<typename T> void visit(T visitor)
   {
     for (std::size_t x = 0; x < width; ++x) {
       for (std::size_t y = 0; y < height; ++y) { visitor(x, y, *this); }
@@ -236,21 +236,21 @@ void game_iteration_canvas()
       for (std::size_t col = 0; col < max_col; ++col) { ++(bm->at(col, row).G); }
     }
 
-    // for the fun of it, let's have a second window doing interesting things
-    auto &small_bm_pixel =
-      small_bm->data().at(static_cast<std::size_t>(elapsed_time.count()) % small_bm->data().size());
+    // // for the fun of it, let's have a second window doing interesting things
+    // auto &small_bm_pixel =
+    //   small_bm->data().at(static_cast<std::size_t>(elapsed_time.count()) % small_bm->data().size());
 
-    switch (elapsed_time.count() % 3) {
-    case 0:
-      small_bm_pixel.R += 11;// NOLINT Magic Number
-      break;
-    case 1:
-      small_bm_pixel.G += 11;// NOLINT Magic Number
-      break;
-    case 2:
-      small_bm_pixel.B += 11;// NOLINT Magic Number
-      break;
-    }
+    // switch (elapsed_time.count() % 3) {
+    // case 0:
+    //   small_bm_pixel.R += 11;// NOLINT Magic Number
+    //   break;
+    // case 1:
+    //   small_bm_pixel.G += 11;// NOLINT Magic Number
+    //   break;
+    // case 2:
+    //   small_bm_pixel.B += 11;// NOLINT Magic Number
+    //   break;
+    // }
 
 
     ++max_row;
@@ -324,7 +324,7 @@ int main(int argc, const char **argv)
       fmt::format("{} {}",
         cpp_jam1_project::cmake::project_name,
         cpp_jam1_project::cmake::project_version));// version string, acquired
-                                            // from config.hpp via CMake
+                                                   // from config.hpp via CMake
 
     if (args["turn_based"].asBool()) {
       consequence_game();
