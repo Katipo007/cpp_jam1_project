@@ -14,7 +14,8 @@
 // the source template at `configured_files/config.hpp.in`.
 #include <internal_use_only/config.hpp>
 
-template<std::size_t Width, std::size_t Height> struct GameBoard
+template<std::size_t Width, std::size_t Height>
+struct GameBoard
 {
     static constexpr std::size_t width = Width;
     static constexpr std::size_t height = Height;
@@ -31,7 +32,10 @@ template<std::size_t Width, std::size_t Height> struct GameBoard
     {
         get(x, y) = new_value;
 
-        if (new_value) { get_string(x, y) = " ON"; }
+        if (new_value)
+        {
+            get_string(x, y) = " ON";
+        }
         else
         {
             get_string(x, y) = "OFF";
@@ -42,7 +46,10 @@ template<std::size_t Width, std::size_t Height> struct GameBoard
     {
         for (std::size_t x = 0; x < width; ++x)
         {
-            for (std::size_t y = 0; y < height; ++y) { visitor(x, y, *this); }
+            for (std::size_t y = 0; y < height; ++y)
+            {
+                visitor(x, y, *this);
+            }
         }
     }
 
@@ -59,7 +66,10 @@ template<std::size_t Width, std::size_t Height> struct GameBoard
     {
         for (std::size_t x = 0; x < width; ++x)
         {
-            for (std::size_t y = 0; y < height; ++y) { set(x, y, get(x, y)); }
+            for (std::size_t y = 0; y < height; ++y)
+            {
+                set(x, y, get(x, y));
+            }
         }
     }
 
@@ -69,10 +79,22 @@ template<std::size_t Width, std::size_t Height> struct GameBoard
     {
         ++move_count;
         toggle(x, y);
-        if (x > 0) { toggle(x - 1, y); }
-        if (y > 0) { toggle(x, y - 1); }
-        if (x < width - 1) { toggle(x + 1, y); }
-        if (y < height - 1) { toggle(x, y + 1); }
+        if (x > 0)
+        {
+            toggle(x - 1, y);
+        }
+        if (y > 0)
+        {
+            toggle(x, y - 1);
+        }
+        if (x < width - 1)
+        {
+            toggle(x + 1, y);
+        }
+        if (y < height - 1)
+        {
+            toggle(x, y + 1);
+        }
     }
 
     [[nodiscard]] bool solved() const
@@ -81,7 +103,10 @@ template<std::size_t Width, std::size_t Height> struct GameBoard
         {
             for (std::size_t y = 0; y < height; ++y)
             {
-                if (!get(x, y)) { return false; }
+                if (!get(x, y))
+                {
+                    return false;
+                }
             }
         }
 
@@ -100,7 +125,10 @@ void consequence_game()
 
     const auto update_quit_text = [&quit_text](const auto &game_board) {
         quit_text = fmt::format("Quit ({} moves)", game_board.move_count);
-        if (game_board.solved()) { quit_text += " Solved!"; }
+        if (game_board.solved())
+        {
+            quit_text += " Solved!";
+        }
     };
 
     const auto make_buttons = [&] {
@@ -110,7 +138,10 @@ void consequence_game()
             for (std::size_t y = 0; y < gb.height; ++y)
             {
                 buttons.push_back(ftxui::Button(&gb.get_string(x, y), [=, &gb] {
-                    if (!gb.solved()) { gb.press(x, y); }
+                    if (!gb.solved())
+                    {
+                        gb.press(x, y);
+                    }
                     update_quit_text(gb);
                 }));
             }
@@ -151,7 +182,10 @@ void consequence_game()
     std::uniform_int_distribution<std::size_t> x(static_cast<std::size_t>(0), gb.width - 1);
     std::uniform_int_distribution<std::size_t> y(static_cast<std::size_t>(0), gb.height - 1);
 
-    for (int i = 0; i < randomization_iterations; ++i) { gb.press(x(gen32), y(gen32)); }
+    for (int i = 0; i < randomization_iterations; ++i)
+    {
+        gb.press(x(gen32), y(gen32));
+    }
     gb.move_count = 0;
     update_quit_text(gb);
 
@@ -240,12 +274,18 @@ void game_iteration_canvas()
 
         for (std::size_t row = 0; row < max_row; ++row)
         {
-            for (std::size_t col = 0; col < bm->width(); ++col) { ++(bm->at(col, row).R); }
+            for (std::size_t col = 0; col < bm->width(); ++col)
+            {
+                ++(bm->at(col, row).R);
+            }
         }
 
         for (std::size_t row = 0; row < bm->height(); ++row)
         {
-            for (std::size_t col = 0; col < max_col; ++col) { ++(bm->at(col, row).G); }
+            for (std::size_t col = 0; col < max_col; ++col)
+            {
+                ++(bm->at(col, row).G);
+            }
         }
 
         // for the fun of it, let's have a second window doing interesting things
@@ -267,9 +307,15 @@ void game_iteration_canvas()
 
 
         ++max_row;
-        if (max_row >= bm->height()) { max_row = 0; }
+        if (max_row >= bm->height())
+        {
+            max_row = 0;
+        }
         ++max_col;
-        if (max_col >= bm->width()) { max_col = 0; }
+        if (max_col >= bm->width())
+        {
+            max_col = 0;
+        }
     };
 
     auto screen = ftxui::ScreenInteractive::TerminalOutput();
@@ -341,7 +387,10 @@ int main(int argc, const char **argv)
                 cpp_jam1_project::cmake::project_version));// version string, acquired
                                                            // from config.hpp via CMake
 
-        if (args["turn_based"].asBool()) { consequence_game(); }
+        if (args["turn_based"].asBool())
+        {
+            consequence_game();
+        }
         else
         {
             game_iteration_canvas();
